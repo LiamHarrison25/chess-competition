@@ -74,6 +74,9 @@ void move(chess::Board &board) {
   // get stats
   auto afterTime = std::chrono::high_resolution_clock::now();
   // apply move
+  // remove \n if present
+  moveStr.erase(std::remove(moveStr.begin(), moveStr.end(), '\n'),
+                moveStr.end());
   auto move = chess::uci::uciToMove(board, moveStr);
   board.makeMove(move);
 
