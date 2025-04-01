@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unordered_map>
 
+
 const int BOARD_SIZE = 8;
 
 enum BoardLetters
@@ -34,6 +35,12 @@ public:
     Board()
     {
         board.reserve(BOARD_SIZE * 2);
+    }
+
+    //uses fen as the input
+    Board(std::string fenInput)
+    {
+
     }
 
     Piece GetPiece(BoardLetters letter, int number)

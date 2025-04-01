@@ -17,6 +17,11 @@ void Board::InitializeGrid()
     }
 }
 
+Board::Board()
+{
+    board.reserve(BOARD_SIZE * 2);
+}
+
 //TODO: Set up the spawn positions
 //TODO: Optimize the memory for this
 //TODO: Make a way to submit moves to this and check if it is valid. Use the current chess library as an example
