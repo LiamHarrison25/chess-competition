@@ -2,9 +2,16 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <piece.h>
 
 
 const int BOARD_SIZE = 8;
+
+enum BoardLetters;
+enum PieceTypes;
+struct Piece;
+struct Tile;
+class Board;
 
 enum BoardLetters
 {
@@ -18,24 +25,12 @@ enum BoardLetters
     h
 };
 
-enum PieceTypes
-{
-    King,
-    Queen,
-    Bishup,
-    Castle,
-    Knight,
-    Pawn
-};
-
 class Board
 {
 public:
 
-    Board()
-    {
-        board.reserve(BOARD_SIZE * 2);
-    }
+    Board();
+   
 
     //uses fen as the input
     Board(std::string fenInput)
@@ -61,20 +56,5 @@ private:
     std::unordered_map<int, Tile> board;
 };
 
-struct Tile
-{
-    void SetPiece(Piece piece)
-    {
-        this->piece = piece;
-        containsPiece = true;
-    }
-    bool whiteTile;
-    Piece piece;
-    bool containsPiece;
-};
 
-struct Piece
-{
-    PieceTypes pieceType;
-};
 
