@@ -35,7 +35,7 @@ public:
     //uses fen as the input
     Board(std::string fenInput)
     {
-
+        InitializeGrid(fenInput);
     }
 
     Piece GetPiece(BoardLetters letter, int number)
@@ -51,7 +51,7 @@ public:
 
 private:
 
-    void InitializeGrid();
+    void InitializeGrid(std::string fenInput);
 
     std::unordered_map<int, Tile> board;
 };

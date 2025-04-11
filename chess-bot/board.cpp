@@ -1,7 +1,10 @@
 #include "board.h"
 
-void Board::InitializeGrid()
+void Board::InitializeGrid(std::string fenInput)
 {
+
+    //TODO: use an stream to take in the fenInput and initialize the grid using it
+
     bool flipColor = true;
     int i, j;
     for (int i = 0; i < BOARD_SIZE; i++)
@@ -13,6 +16,8 @@ void Board::InitializeGrid()
             tile.containsPiece = false;
             flipColor = !flipColor;
             //TODO: Initialize the piece type
+
+
         }
     }
 }
