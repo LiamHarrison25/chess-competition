@@ -7,7 +7,8 @@ enum PieceTypes
     Bishup,
     Castle,
     Knight,
-    Pawn
+    Pawn,
+    Empty
 };
 
 struct Piece

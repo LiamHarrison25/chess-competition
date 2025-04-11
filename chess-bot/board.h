@@ -31,27 +31,18 @@ public:
 
     Board();
    
-
     //uses fen as the input
-    Board(std::string fenInput)
-    {
-        InitializeGrid(fenInput);
-    }
+    Board(std::string fenInput);
 
-    Piece GetPiece(BoardLetters letter, int number)
-    {
-        return board[(int)letter * BOARD_SIZE + number].piece;
-    }
+    Piece GetPiece(BoardLetters letter, int number);
 
-    Piece SetPiece(BoardLetters letter, int number, Piece piece)
-    {
-        Tile tile = board[(int)letter * BOARD_SIZE + number];
-        tile.piece = piece;
-    }
+    Piece SetPiece(BoardLetters letter, int number, Piece piece);
 
 private:
 
     void InitializeGrid(std::string fenInput);
+
+    void SetPiece(Piece piece, int row, int &spacing, bool isWhite);
 
     std::unordered_map<int, Tile> board;
 };
