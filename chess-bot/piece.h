@@ -14,6 +14,7 @@ enum PieceTypes
 struct Piece
 {
     PieceTypes pieceType;
+    bool isWhite;
 };
 
 struct Tile

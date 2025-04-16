@@ -3,6 +3,7 @@
 // https://github.com/Disservin/chess-library
 #include "chess.hpp"
 #include <random>
+#include "board.h"
 using namespace ChessSimulator;
 
 std::string ChessSimulator::Move(std::string fen) {
@@ -14,6 +15,10 @@ std::string ChessSimulator::Move(std::string fen) {
   // using the one provided by the library
 
     //TODO: Recieve the input as a string in fen  (Forsyth-Edwards Notation)
+
+    std::string fenCopy = fen;
+
+    Board customBoard(fenCopy);
 
     //TODO: Create a custom chess engine to work with this input and output
 

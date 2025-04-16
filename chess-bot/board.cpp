@@ -4,16 +4,29 @@
 void Board::InitializeGrid(std::string fenInput)
 {
 
-    //TODO: use an stream to take in the fenInput and initialize the grid using it
+    // take in the fenInput and initialize the grid using it
 
     board.reserve(8 * 8);
+
+    int row = 8; // starts at the top left
+    int spacing = 0;
 
     int i;
     for (i = 0; i < fenInput.length(); i++)
     {
-        int row = 8; // starts at the top left
-        int spacing = 0;
+        
+        //TODO: Fix this so that it works with the rest of FEN. w for white, b for black, k for kingside castling, q for queenside castling, - no castling, 
+
         char input = fenInput[i];
+
+        CheckSpacing(spacing);
+
+        //checks if the input is a number
+        if (input >= 49 && input <= 57)
+        {
+            spacing += (((int)input - 48) - 1);
+            continue;
+        }
 
         switch (input)
         {
@@ -21,6 +34,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Castle;
+                piece.isWhite = false;
                 SetPiece(piece, row, spacing, false);
                 break;
             }
@@ -28,6 +42,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Castle;
+                piece.isWhite = true;
                 SetPiece(piece, row, spacing, true);
                 break;
             }
@@ -35,6 +50,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Knight;
+                piece.isWhite = false;
                 SetPiece(piece, row, spacing, false);
                 break;
             }
@@ -42,6 +58,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Knight;
+                piece.isWhite = true;
                 SetPiece(piece, row, spacing, true);
                 break;
             }
@@ -49,6 +66,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Bishup;
+                piece.isWhite = false;
                 SetPiece(piece, row, spacing, false);
                 break;
             }
@@ -56,6 +74,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Bishup;
+                piece.isWhite = true;
                 SetPiece(piece, row, spacing, true);
                 break;
             }
@@ -63,6 +82,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Queen;
+                piece.isWhite = false;
                 SetPiece(piece, row, spacing, false);
                 break;
             }
@@ -70,6 +90,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Queen;
+                piece.isWhite = true;
                 SetPiece(piece, row, spacing, true);
                 break;
             }
@@ -77,6 +98,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::King;
+                piece.isWhite = false;
                 SetPiece(piece, row, spacing, false);
                 break;
             }
@@ -84,6 +106,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::King;
+                piece.isWhite = true;
                 SetPiece(piece, row, spacing, true);
                 break;
             }
@@ -91,6 +114,7 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Pawn;
+                piece.isWhite = false;
                 SetPiece(piece, row, spacing, false);
                 break;
             }
@@ -98,50 +122,57 @@ void Board::InitializeGrid(std::string fenInput)
             {
                 Piece piece;
                 piece.pieceType = PieceTypes::Pawn;
+                piece.isWhite = true;
                 SetPiece(piece, row, spacing, true);
                 break;
             }
             case '/':
             {
                 row--;
+                spacing = 0;
                 if (row <= 0)
                 {
                     break;
                 }
                 break;
             }
-            default:
+            case 'w':
             {
-                //checks if the input is a number
-                if (input >= 49 || input <= 57)
-                {
-
-                }
+                
                 break;
             }
         }
     }
 
-    bool flipColor = true;
-    int i, j;
-    for (int i = 0; i < BOARD_SIZE; i++)
+    //bool flipColor = true;
+    //int j;
+    //for (int i = 0; i < BOARD_SIZE; i++)
+    //{
+    //    for (int j = 0; j < BOARD_SIZE; j++)
+    //    {
+    //        Tile tile = board[i * BOARD_SIZE + j];
+    //        tile.whiteTile = flipColor;
+    //        tile.containsPiece = false;
+    //        flipColor = !flipColor;
+    //        //TODO: Initialize the piece type
+
+
+    //    }
+    //}
+}
+
+void Board::CheckSpacing(int& spacing)
+{
+    if (spacing >= 8)
     {
-        for (int j = 0; j < BOARD_SIZE; j++)
-        {
-            Tile tile = board[i * BOARD_SIZE + j];
-            tile.whiteTile = flipColor;
-            tile.containsPiece = false;
-            flipColor = !flipColor;
-            //TODO: Initialize the piece type
-
-
-        }
+        spacing = 0;
     }
 }
 
 void Board::SetPiece(Piece piece, int row, int& spacing, bool isWhite)
 {
-
+    board[8 * row + spacing] = piece;
+    spacing++; // Increments the spacing in the row
 }
 
 Board::Board()
@@ -156,14 +187,14 @@ Board::Board(std::string fenInput)
 
 Piece Board::GetPiece(BoardLetters letter, int number)
 {
-    return board[(int)letter * BOARD_SIZE + number].piece;
+    return board[(int)letter * BOARD_SIZE + number];
 }
 
-Piece Board::SetPiece(BoardLetters letter, int number, Piece piece)
-{
-    Tile tile = board[(int)letter * BOARD_SIZE + number];
-    tile.piece = piece;
-}
+//void Board::SetPiece(BoardLetters letter, int number, Piece piece)
+//{
+//    Tile tile = board[(int)letter * BOARD_SIZE + number];
+//    tile.piece = piece;
+//}
 
 
 //TODO: Set up the spawn positions

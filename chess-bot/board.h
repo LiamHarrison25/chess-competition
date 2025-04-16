@@ -36,7 +36,7 @@ public:
 
     Piece GetPiece(BoardLetters letter, int number);
 
-    Piece SetPiece(BoardLetters letter, int number, Piece piece);
+    //void SetPiece(BoardLetters letter, int number, Piece piece);
 
 private:
 
@@ -44,7 +44,9 @@ private:
 
     void SetPiece(Piece piece, int row, int &spacing, bool isWhite);
 
-    std::unordered_map<int, Tile> board;
+    void CheckSpacing(int& spacing);
+
+    std::unordered_map<int, Piece> board;
 };
 
 
