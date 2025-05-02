@@ -7,8 +7,6 @@
 
 const int BOARD_SIZE = 8;
 
-enum BoardLetters;
-enum PieceTypes;
 struct Piece;
 struct Tile;
 class Board;

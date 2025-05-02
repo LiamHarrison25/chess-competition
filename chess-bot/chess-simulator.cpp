@@ -4,7 +4,7 @@
 //#include "chess.hpp"
 #include <random>
 //#include "board.h"
-#include "../minMax/MinMax.h"
+#include "MinMax.h"
 using namespace ChessSimulator;
 
 std::string ChessSimulator::Move(std::string fen) {

@@ -99,6 +99,8 @@ int MinMax::evaluateHeuristic(chess::Board board, bool isWhite)
 
 	// Add to the score depending on the piece
 
+	//TODO: May have to change how I am calculating the number of pieces because it can randomly break
+
 	// Add Bishop score
 	chess::Bitboard bitBoard = board.pieces(chess::PieceType::BISHOP);
 	score += CalculatePieceScore(bitBoard, chess::PieceType::BISHOP, isWhite) * bishopScore;
@@ -137,7 +139,7 @@ int MinMax::CalculatePieceScore(chess::Bitboard bitBoard, chess::PieceType type,
 
 		chess::Piece piece = static_cast<chess::Piece::underlying>(pieceValue);
 
-		if (piece.color() == chess::Color::BLACK) //Error here
+		if (piece.color() == chess::Color::BLACK) //BUG: Error here
 		{
 			if (isWhite)
 			{
