@@ -65,7 +65,7 @@ void Board::InitializeGrid(std::string fenInput)
             case 'b':
             {
                 Piece piece;
-                piece.pieceType = PieceTypes::Bishup;
+                piece.pieceType = PieceTypes::Bishop;
                 piece.isWhite = false;
                 SetPiece(piece, row, spacing, false);
                 break;
@@ -73,7 +73,7 @@ void Board::InitializeGrid(std::string fenInput)
             case 'B':
             {
                 Piece piece;
-                piece.pieceType = PieceTypes::Bishup;
+                piece.pieceType = PieceTypes::Bishop;
                 piece.isWhite = true;
                 SetPiece(piece, row, spacing, true);
                 break;

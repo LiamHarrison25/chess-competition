@@ -16,9 +16,9 @@ std::string ChessSimulator::Move(std::string fen) {
 
     //TODO: Recieve the input as a string in fen  (Forsyth-Edwards Notation)
 
-    std::string fenCopy = fen;
+    //std::string fenCopy = fen;
 
-    Board customBoard(fenCopy);
+    //Board customBoard(fenCopy);
 
     //TODO: Create a custom chess engine to work with this input and output
 
@@ -32,6 +32,10 @@ std::string ChessSimulator::Move(std::string fen) {
   chess::movegen::legalmoves(moves, board);
   if(moves.size() == 0)
     return "";
+
+  //TOOD: Evaluate what the best move is
+
+
 
   // get random move
   std::random_device rd;

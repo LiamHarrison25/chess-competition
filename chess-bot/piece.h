@@ -4,7 +4,7 @@ enum PieceTypes
 {
     King,
     Queen,
-    Bishup,
+    Bishop,
     Castle,
     Knight,
     Pawn,
