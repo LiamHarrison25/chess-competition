@@ -14,28 +14,12 @@ std::string ChessSimulator::Move(std::string fen) {
   // extra points if you create your own board/move representation instead of
   // using the one provided by the library
 
-    //TODO: Recieve the input as a string in fen  (Forsyth-Edwards Notation)
-
-    //std::string fenCopy = fen;
-
-    //Board customBoard(fenCopy);
-
-    //TODO: Create a custom chess engine to work with this input and output
-
-    //TODO: Make a random move from this input
-
-    //TODO: Output the move in UCI (Universal Chess Interface)
-
   // here goes a random movement
   chess::Board board(fen);
   chess::Movelist moves;
   chess::movegen::legalmoves(moves, board);
   if(moves.size() == 0)
     return "";
-
-  //TOOD: Evaluate what the best move is
-
-
 
   // get random move
   std::random_device rd;

@@ -13,19 +13,58 @@ int castleScore = 15;
 int queenScore = 50;
 int kingScore = 1000;
 
-int minMax(chess::Board& board, int depth, int alpha, int beta, bool isMaximizingPlayer)
+// gets the optimal move
+std::string GetOptimalMove(std::string& fen, int depth)
+{
+	// Creates the board from the input
+	chess::Board board(fen);
+	chess::Movelist moves;
+	chess::movegen::legalmoves(moves, board);
+
+	//TODO: Change when I figure this out:
+	bool isWhite = true;
+
+	if (moves.size() == 0) // Has no possible moves to make
+	{
+		return "";
+	}
+		
+	chess::Move optimalMove;
+	int bestScore = std::numeric_limits<int>::max();
+	
+	// Run through all of the possible moves\	
+
+	for (auto move : moves)
+	{
+		board.makeMove(move);
+		int currentScore = minMax(board, depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), false, isWhite);
+
+		// Undo the move so that the board does not get affected by a bad or not optimal move
+		board.unmakeMove(move);
+
+		if (currentScore > bestScore)
+		{
+			bestScore = currentScore;
+			optimalMove = move;
+		}
+	}
+	
+	return chess::uci::moveToUci(optimalMove);
+}
+
+int minMax(chess::Board& board, int depth, int alpha, int beta, bool isMaxing, bool isWhite)
 {
 	if (depth == 0 || board.isGameOver().second != chess::GameResult::NONE) // checks if the depth is 0 or if the game is over
 	{
 		//TODO: Evaluate the state and return it
-		return evaluateHeuristic(board);
+		return evaluateHeuristic(board, isWhite);
 	}
 
 	chess::Movelist moves;
 	chess::movegen::legalmoves(moves, board);
 	
 	// Gets the best possible value
-	int bestValue = isMaximizingPlayer ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
+	int bestScore = isMaxing ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
 
 	// Go through all of the moves
 
@@ -34,23 +73,22 @@ int minMax(chess::Board& board, int depth, int alpha, int beta, bool isMaximizin
 	{
 		board.makeMove(moves[i]); // test out a move
 
-		int value = minMax(board, depth - 1, alpha, beta, !isMaximizingPlayer);
+		int value = minMax(board, depth - 1, alpha, beta, !isMaxing, isWhite);
 
 		// update the best value
 
-		if (isMaximizingPlayer)
+		if (isMaxing)
 		{
 			// Maximize
-			bestValue = std::max(bestValue, value);
-			alpha = std::max(alpha, bestValue);
+			bestScore = std::max(bestScore, value);
+			alpha = std::max(alpha, bestScore);
 		}
 		else
 		{
 			// Minimize
-			bestValue = std::min(bestValue, value);
-			beta = std::min(beta, bestValue);
+			bestScore = std::min(bestScore, value);
+			beta = std::min(beta, bestScore);
 		}
-
 
 		// Apply the alpha beta pruning
 		if (beta <= alpha)
@@ -58,7 +96,8 @@ int minMax(chess::Board& board, int depth, int alpha, int beta, bool isMaximizin
 			break; // do not go down this branch.
 		}
 	}
-	return bestValue;
+
+	return bestScore;
 
 }
 
