@@ -131,12 +131,13 @@ int MinMax::CalculatePieceScore(chess::Bitboard bitBoard, chess::PieceType type,
 	int score = 0;
 	//score += bitBoard.count() * bishopScore;
 
-	while (bitBoard.count() > 0)
+	while (bitBoard.count() > 0) // 
 	{
 		uint8_t pieceValue = bitBoard.pop();
+
 		chess::Piece piece = static_cast<chess::Piece::underlying>(pieceValue);
 
-		if (piece.color() == chess::Color::BLACK)
+		if (piece.color() == chess::Color::BLACK) //Error here
 		{
 			if (isWhite)
 			{
@@ -164,28 +165,31 @@ int MinMax::CalculatePieceScore(chess::Bitboard bitBoard, chess::PieceType type,
 
 int MinMax::GetPieceScore(chess::PieceType type)
 {
-	if (type == chess::PieceType::BISHOP)
+	switch (type.internal())
 	{
-		return bishopScore;
-	}
-	else if (type == chess::PieceType::KNIGHT)
-	{
-		return knightScore;
-	}
-	else if (type == chess::PieceType::PAWN)
-	{
-		return pawnScore;
-	}
-	else if (type == chess::PieceType::ROOK)
-	{
-		return castleScore;
-	}
-	else if (type == chess::PieceType::QUEEN)
-	{
-		return queenScore;
-	}
-	else if (type == chess::PieceType::KING)
-	{
-		return kingScore;
+		case chess::PieceType::PAWN:
+		{
+			return pawnScore;
+		}
+		case chess::PieceType::BISHOP:
+		{
+			return bishopScore;
+		}
+		case chess::PieceType::KNIGHT:
+		{
+			return knightScore;
+		}
+		case chess::PieceType::ROOK:
+		{
+			return castleScore;
+		}
+		case chess::PieceType::QUEEN:
+		{
+			return queenScore;
+		}
+		case chess::PieceType::KING:
+		{
+			return kingScore;
+		}
 	}
 }

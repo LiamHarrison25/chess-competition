@@ -6,12 +6,7 @@
 
 // Min max with alpha beta pruning
 
-int pawnScore = 1;
-int knightScore = 5;
-int bishopScore = 10;
-int castleScore = 15;
-int queenScore = 50;
-int kingScore = 1000;
+
 
 class MinMax
 {
@@ -30,5 +25,13 @@ private:
 	int CalculatePieceScore(chess::Bitboard bitBoard, chess::PieceType type, bool isWhite);
 
 	int GetPieceScore(chess::PieceType type);
+
+	// Scores
+	const int pawnScore = 1;
+	const int knightScore = 5;
+	const int bishopScore = 10;
+	const int castleScore = 15;
+	const int queenScore = 50;
+	const int kingScore = 1000;
 
 };
