@@ -1,5 +1,7 @@
 #include "MinMax.h"
 
+static constexpr bool isValid(int c) { return c == 0 || c == 1 || c == -1; }
+
 std::string MinMax::GetOptimalMove(std::string& fen, int depth)
 {
 	// Creates the board from the input
@@ -16,24 +18,28 @@ std::string MinMax::GetOptimalMove(std::string& fen, int depth)
 	}
 
 	chess::Move optimalMove;
-	int bestScore = std::numeric_limits<int>::max();
+	int bestScore = std::numeric_limits<int>::min();
 
-	// Run through all of the possible moves\	
+	// Run through all of the possible moves
 
-	for (auto move : moves)
+	optimalMove = moves[0]; // Sets the default move
+
+	int i;
+	for (i = 0; i < moves.size() - 1; i++)
 	{
-		board.makeMove(move);
-		int currentScore = minMax(board, depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), false, isWhite);
+		board.makeMove(moves[i]);
+		int currentScore = minMax(board, depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), false, isWhite); //evaluateHeuristic(board, isWhite);
 
 		// Undo the move so that the board does not get affected by a bad or not optimal move
-		board.unmakeMove(move);
+		board.unmakeMove(moves[i]);
 
 		if (currentScore > bestScore)
 		{
 			bestScore = currentScore;
-			optimalMove = move;
+			optimalMove = moves[i];
 		}
 	}
+
 
 	return chess::uci::moveToUci(optimalMove);
 }
@@ -55,11 +61,13 @@ int MinMax::minMax(chess::Board& board, int depth, int alpha, int beta, bool isM
 	// Go through all of the moves
 
 	int i;
-	for (i = 0; i < moves.size(); i++)
+	for (i = 0; i < moves.size() - 1; i++)
 	{
 		board.makeMove(moves[i]); // test out a move
 
 		int value = minMax(board, depth - 1, alpha, beta, !isMaxing, isWhite);
+
+		board.unmakeMove(moves[i]);
 
 		// update the best value
 
@@ -79,8 +87,11 @@ int MinMax::minMax(chess::Board& board, int depth, int alpha, int beta, bool isM
 		// Apply the alpha beta pruning
 		if (beta <= alpha)
 		{
-			break; // do not go down this branch.
+			//board.unmakeMove(moves[i]);
+			//break; // do not go down this branch.
 		}
+
+		
 	}
 
 	return bestScore;
@@ -91,7 +102,7 @@ int MinMax::evaluateHeuristic(chess::Board board, bool isWhite)
 {
 	//TODO: Evaluate the heuristic
 
-	std::string fen = board.getFen();
+	//std::string fen = board.getFen();
 
 	int score = 0;
 
@@ -101,29 +112,30 @@ int MinMax::evaluateHeuristic(chess::Board board, bool isWhite)
 
 	//TODO: May have to change how I am calculating the number of pieces because it can randomly break
 
+
 	// Add Bishop score
 	chess::Bitboard bitBoard = board.pieces(chess::PieceType::BISHOP);
-	score += CalculatePieceScore(bitBoard, chess::PieceType::BISHOP, isWhite) * bishopScore;
+	score += bitBoard.count(); //CalculatePieceScore(bitBoard, chess::PieceType::BISHOP, isWhite) * bishopScore;
 
 	// Add Knight score
 	bitBoard = board.pieces(chess::PieceType::KNIGHT);
-	score += CalculatePieceScore(bitBoard, chess::PieceType::KNIGHT, isWhite) * knightScore;
+	score += bitBoard.count(); //CalculatePieceScore(bitBoard, chess::PieceType::KNIGHT, isWhite) * knightScore;
 
 	// Add Castle score
 	bitBoard = board.pieces(chess::PieceType::ROOK);
-	score += CalculatePieceScore(bitBoard, chess::PieceType::ROOK, isWhite) * castleScore;
+	score += bitBoard.count(); //CalculatePieceScore(bitBoard, chess::PieceType::ROOK, isWhite) * castleScore;
 
 	// Add pawn score
 	bitBoard = board.pieces(chess::PieceType::PAWN);
-	score += CalculatePieceScore(bitBoard, chess::PieceType::PAWN, isWhite) * pawnScore;
+	score += bitBoard.count();//CalculatePieceScore(bitBoard, chess::PieceType::PAWN, isWhite) * pawnScore;
 
 	// Add Queen score
 	bitBoard = board.pieces(chess::PieceType::QUEEN);
-	score += CalculatePieceScore(bitBoard, chess::PieceType::QUEEN, isWhite) * queenScore;
+	score += bitBoard.count(); //CalculatePieceScore(bitBoard, chess::PieceType::QUEEN, isWhite) * queenScore;
 
 	// Add King score
 	bitBoard = board.pieces(chess::PieceType::KING);
-	score += CalculatePieceScore(bitBoard, chess::PieceType::KING, isWhite) * kingScore;
+	score += bitBoard.count(); //CalculatePieceScore(bitBoard, chess::PieceType::KING, isWhite) * kingScore;
 
 	return score;
 }
@@ -139,31 +151,36 @@ int MinMax::CalculatePieceScore(chess::Bitboard bitBoard, chess::PieceType type,
 
 		chess::Piece piece = static_cast<chess::Piece::underlying>(pieceValue);
 
-		if (piece.color() == chess::Color::BLACK) //BUG: Error here
+		if (isValid(static_cast<int>(piece.color())))
 		{
-			if (isWhite)
+			if (piece.color() == chess::Color::BLACK) //BUG: Error here
 			{
-				score += GetPieceScore(type);
+				if (isWhite)
+				{
+					score += GetPieceScore(type);
+				}
+				else
+				{
+					score -= GetPieceScore(type);
+				}
 			}
 			else
 			{
-				score -= GetPieceScore(type);
+				if (isWhite)
+				{
+					score -= GetPieceScore(type);
+				}
+				else
+				{
+					score += GetPieceScore(type);
+				}
 			}
-		}
-		else
-		{
-			if (isWhite)
-			{
-				score -= GetPieceScore(type);
-			}
-			else
-			{
-				score += GetPieceScore(type);
-			}
-		}
+		}		
 	}
 	return score;
 }
+
+
 
 int MinMax::GetPieceScore(chess::PieceType type)
 {

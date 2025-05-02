@@ -16,7 +16,7 @@ std::string ChessSimulator::Move(std::string fen) {
   // using the one provided by the library
 
     MinMax minMax;
-    //return minMax.GetOptimalMove(fen, 2);
+    return minMax.GetOptimalMove(fen, 3);
 
     //return GetOptimalMove(fen, 2);
 
